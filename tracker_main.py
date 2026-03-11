@@ -108,6 +108,15 @@ async def track_open(tracking_id: str, request: Request):
     if request.method == "HEAD":
         return Response(status_code=200)
 
+    # LOG EVERYTHING before any filtering
+    logger.info(
+        "RAW_OPEN | tracking_id=%s | ip=%s | ua='%s' | all_headers=%s",
+        tracking_id,
+        real_ip,
+        ua,
+        dict(request.headers)
+    )
+
     if is_bot(request):
         logger.info("OPEN_BLOCKED | tracking_id=%s | ip=%s", tracking_id, real_ip)
         return Response(content=_PIXEL_GIF, media_type="image/gif")
